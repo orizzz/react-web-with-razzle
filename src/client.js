@@ -1,0 +1,17 @@
+import App from './App';
+import BrowserRouter from 'react-router-dom/BrowserRouter';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/App.css';
+import React from 'react';
+import { hydrate } from 'react-dom';
+
+hydrate(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+if (module.hot) {
+  module.hot.accept();
+}
