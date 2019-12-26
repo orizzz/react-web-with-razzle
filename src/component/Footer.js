@@ -70,16 +70,16 @@ class Footer extends Component {
         return (
         <div id="footerView">
             <div className="container py-3 d-flex">
-                <Nav justify className="flex-column mx-auto">
+                <Nav justify className="flex-column mx-auto text-capitalize">
                     <div className="h5 text-light">kost di jakarta</div>
                 {this.state.lokasi_jakarta.map(lokasi => 
-                    <NavLink className="p-1 text-lowercase" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
+                    <NavLink className="p-1 text-white" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
                 )}
                 </Nav>
-                <Nav justify className="flex-column mx-auto">
+                <Nav justify className="flex-column mx-auto text-capitalize">
                     <div className="h5 text-light">lokasi favorit</div>
                 {this.state.lokasi_other.map(lokasi => 
-                    <NavLink className="p-1 text-lowercase" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
+                    <NavLink className="p-1 text-white" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
                 )}
                 </Nav>
                 <Nav className="flex-column ml-auto">

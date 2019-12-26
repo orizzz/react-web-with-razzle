@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import API_URL from '../config'
 
 import banner_1 from '../img/carosel_1.jpg'

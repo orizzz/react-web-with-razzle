@@ -22,7 +22,7 @@ import Link from 'react-router-dom/Link'
   var carosel_item = [];
   for (var i = 1; i <= 3; i++) {
     carosel_item.push(
-      <Carousel.Item>
+      <Carousel.Item id={i}>
           <img
             className="img d-block w-100 rounded"
             src={banner_1}
@@ -198,7 +198,7 @@ renderList(item){
         </Parallax>
         <div className="container py-3 px-5">
           <div className="d-flex pt-5 pb-3">
-            <div className="h3 font-weight-bold mx-auto my-auto">Kost Rekomendasi Kammi</div>
+            <div className="h3 font-weight-bold mx-auto my-auto">Kost Rekomendasi Kami</div>
           </div>
             {this.renderList(this.state.rekomendasi)}
           <div className="d-flex pt-5 pb-3">
@@ -265,7 +265,7 @@ renderList(item){
               <div className="container">
 
               <div>
-                <div className="text-light">
+                <div className="text-light text-decoration-none">
                   <div className="h1 text-center mt-4">Cari Kostmu di sini Sekarang</div>
                   <div className="row text-center p-5 mb-3">
                     <div className="col-4">
