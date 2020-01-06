@@ -1,10 +1,11 @@
 import App from './App';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import appCss from  './css/App.css';
-import { StaticRouter } from 'react-router-dom';
+import style from './App.module.css'
+import {StaticRouter}  from 'react-router-dom';
 import express from 'express';
 import { renderToString } from 'react-dom/server';
+import Helmet from 'react-helmet'
 
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
@@ -20,29 +21,32 @@ server
       </StaticRouter>
     );
 
+    const helmet = Helmet.renderStatic();
+    
     if (context.url) {
       res.redirect(context.url);
     } else {
       res.status(200).send(
         `<!doctype html>
-    <html lang="">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta charset="utf-8" />
-        <title>Webkosan</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <html ${helmet.htmlAttributes.toString()}>
+        <head>
+          ${helmet.meta.toString()}
+          ${helmet.link.toString()}
+          ${helmet.title.toString()}
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head>
+        
         ${
           assets.client.css
             ? `<link rel="stylesheet" href="${assets.client.css}">`
-            : `<link rel="stylesheet" href="${assets.client.css}">`
-        }
+            : ''}
         ${
           process.env.NODE_ENV === 'production'
             ? `<script src="${assets.client.js}" defer></script>`
             : `<script src="${assets.client.js}" defer crossorigin></script>`
         }
     </head>
-    <body>
+    <body ${helmet.bodyAttributes.toString()}>
         <div id="root">${markup}</div>
     </body>
 </html>`

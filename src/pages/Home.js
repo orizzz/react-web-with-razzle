@@ -13,30 +13,14 @@ import like from '../img/facility/like.png'
 import quality from '../img/facility/quality.png'
 import pay from '../img/facility/pay.png'
 
-import SearchBar from '../component/SearchBar';
 
+import SearchBar from '../component/SearchBar';
+import loadData from '../helper/loadData';
+
+import CurrencyFormat from 'react-currency-format'
 import { Carousel, Row, Col, Card } from 'react-bootstrap';
 import { Parallax } from 'react-parallax'
-import Link from 'react-router-dom/Link'
-
-  var carosel_item = [];
-  for (var i = 1; i <= 3; i++) {
-    carosel_item.push(
-      <Carousel.Item id={i}>
-          <img
-            className="img d-block w-100 rounded"
-            src={banner_1}
-            alt="First slide"
-            />
-          <Carousel.Caption>
-            <div className="p-2">
-              <div className="h3">slide {i}</div>
-              <div className="h6">Nulla vitae elit libero, a pharetra augue mollis interdum.</div>
-            </div>
-          </Carousel.Caption>
-        </Carousel.Item>
-    );
-  }
+import {Link} from 'react-router-dom'
 
   
   class Main extends Component{
@@ -45,6 +29,7 @@ import Link from 'react-router-dom/Link'
       super(props);
 
       this.state = {
+          carosel:[],
           lokasi: [],
           rekomendasi:[],
           terbaru:[]
@@ -52,71 +37,47 @@ import Link from 'react-router-dom/Link'
       this.renderWilayah = this.renderWilayah.bind(this);
       this.renderList = this.renderList.bind(this);
   }
+  
 
   componentDidMount() {
-    fetch(API_URL,{
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            req: "location"
-        })
+
+    // Lokasi
+
+    loadData("list",{
+      req: "location"
+    }).then(responseJson => {
+      this.setState({ lokasi: responseJson.data })
     })
-    .then(response => response.json())
-    .then(responseJson => { 
-        if(responseJson.status){
-            this.setState({ lokasi: responseJson.data }) 
-        }else{
-            alert("ERROR");
-        }
-    });
-    fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                req:"recommended",
-                limit: 6
-            })
-    }).then(response => response.json())
-    .then(responseJson => {
-        if(responseJson.status){
-            this.setState({rekomendasi: responseJson.data});
-        }else{
-            alert(responseJson.message);
-        }
-        console.log(this.state.rekomendasi);
-        }).catch((error) => {
-        console.log(error)
-    });
-    fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                req:"newest",
-                limit: 6
-            })
-    }).then(response => response.json())
-    .then(responseJson => {
-        if(responseJson.status){
-            this.setState({terbaru: responseJson.data});
-        }else{
-            alert(responseJson.message);
-        }
-        console.log(this.state.terbaru);
-        }).catch((error) => {
-        console.log(error)
-    });
+
+    // Recomended
+    loadData("list",{
+      req:"recommended",
+      limit: 6
+    }).then(responseJson => {
+      this.setState({rekomendasi: responseJson.data})
+    })
+
+    // Newest
+
+    loadData("list",{
+      req:"newest",
+      limit: 6
+    }).then(responseJson => {
+      this.setState({terbaru: responseJson.data})
+    })
+
+    // carosel
+
+    loadData("list",{
+      req:"newest",
+      limit: 3
+    }).then(responseJson => {
+      this.setState({carosel: responseJson.data})
+    })
+
 }
 
-  getURL= (searchBarData)=>{
+  getURL = (searchBarData) => {
     this.props.history.push('/Search/'+searchBarData)
   }
 
@@ -137,12 +98,42 @@ import Link from 'react-router-dom/Link'
     );
 }
 
+renderCarosel(item){
+  let units = item;
+  let caroselItem = units.map(unit => 
+          <Carousel.Item key={unit.index}>
+            <Link  to={{
+              pathname:  '/Detail/' + unit.id_kost + '/' + unit.nama_kost,
+              state: {items_id: unit.id_kost} ,
+            }}>
+              <img className="img d-block w-100 rounded" src={banner_1} alt={unit.nama_kost} />
+            </Link >
+            <Carousel.Caption>
+              <div className="p-2">
+                <div className="h3">{unit.nama_kost}</div>
+                <div className="h6">
+                <div>Rp.  
+                        <CurrencyFormat value={unit.harga} displayType={'text'} thousandSeparator={true} />
+                        /Bulan</div>
+                </div>
+              </div>
+            </Carousel.Caption>
+        </Carousel.Item>
+      );
+  return (
+    <Carousel indicators={false}>
+      {caroselItem}
+    </Carousel>
+    
+    );
+}
+
 renderList(item){
     let units = item;
     let listRekomendasi = units.map(unit => 
 
-        <div className="col-lg-4 col-6 my-2">
-        <Link  to={{
+      <div className="col-lg-4 col-6 my-2" key={unit.index}>
+        <Link to={{
           pathname:  '/Detail/' + unit.id_kost + '/' + unit.nama_kost,
           state: {items_id: unit.id_kost} ,
         }}>
@@ -150,8 +141,15 @@ renderList(item){
               <Card.Img variant="top" src={banner_1} alt="{unit.nama_kost}" /> 
               <Card.Body className="text-dark">
                   <div className="h6">{unit.nama_kost}</div>
-                  <div className="h6 font-weight-light">{unit.lokasi}</div>
+                  <div className="h6  font-weight-light">{unit.lokasi}</div>
               </Card.Body>
+              <Card.Footer>
+                  <div className="h6">
+                    <div>Rp.  
+                      <CurrencyFormat value={unit.harga} displayType={'text'} thousandSeparator={true} />
+                      /Bulan</div>
+                  </div>
+              </Card.Footer>
             </Card>
           </Link >
         </div>
@@ -164,11 +162,12 @@ renderList(item){
 }
   
   render(){
-    console.log(this.props)
     return(
         <div>
           <Helmet>
                 <meta charSet="utf-8" />
+                <meta name="description" content="Sewa kost murah " />
+                <meta name="keywords" content="kost,sewa kost"/>
                 <title>Webkosan - Sewa kosan jabodetabek</title>
                 <link rel="canonical" href="/" />
           </Helmet>
@@ -189,9 +188,7 @@ renderList(item){
             </div>
             <div className="col-lg-8">
               <div className="card p-2 border-0 shadow">
-                <Carousel indicators={false} >
-                  {carosel_item}
-                </Carousel>
+                  {this.renderCarosel(this.state.carosel)}
               </div>
             </div>
           </div>

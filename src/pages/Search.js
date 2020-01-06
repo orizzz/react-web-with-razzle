@@ -3,11 +3,14 @@ import API_URL from '../config'
 
 import banner_1 from '../img/carosel_1.jpg'
 import { Parallax } from 'react-parallax'
-import { Row, Col, Card, Button } from 'react-bootstrap'
+import { Row, Card } from 'react-bootstrap'
 
-import Link from 'react-router-dom/Link'
-
+import {Link} from 'react-router-dom'
 import SearchBar from '../component/SearchBar'
+import CurrencyFormat from 'react-currency-format'
+
+import loadData from '../helper/loadData';
+
 
 class Search extends Component {
 
@@ -27,27 +30,36 @@ class Search extends Component {
     
     componentDidMount(){
         const {searchQuery} = this.props.match.params
-        fetch(API_URL,{
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                req : "search",
-                search_query : searchQuery,
-                limit : this.state.limit
-            })
+
+        loadData("Detail",{
+            req : "search",
+            search_query : searchQuery,
+            limit : this.state.limit
         })
-        .then(response => response.json())
-        .then(responseJson => { 
-            if(responseJson.status){
-                this.setState({ SearchResult: responseJson.data }) 
-                console.log(responseJson)
-            }else{
-                alert("Data tidak ditemukan");
-            }
-        });
+        .then(responseJson => {this.setState({ SearchResult: responseJson.data })
+        })
+        
+        // fetch(API_URL,{
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         req : "search",
+        //         search_query : searchQuery,
+        //         limit : this.state.limit
+        //     })
+        // })
+        // .then(response => response.json())
+        // .then(responseJson => { 
+        //     if(responseJson.status){
+        //         this.setState({ SearchResult: responseJson.data }) 
+        //         console.log(responseJson)
+        //     }else{
+        //         alert("Data tidak ditemukan");
+        //     }
+        // });
     }
     
     renderList(item){
@@ -65,6 +77,13 @@ class Search extends Component {
                       <div className="h6">{unit.nama_kost}</div>
                       <div className="h6 font-weight-light">{unit.lokasi}</div>
                   </Card.Body>
+                  <Card.Footer>
+                  <div className="h6">
+                    <div>Rp.  
+                      <CurrencyFormat value={unit.harga} displayType={'text'} thousandSeparator={true} />
+                      /Bulan</div>
+                  </div>
+              </Card.Footer>
                 </Card>
               </Link >
             </div>

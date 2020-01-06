@@ -1,13 +1,7 @@
 import React from 'react'
 
 import error404 from '../img/404.png'
-import { Parallax } from 'react-parallax'
-
-
-import Button from 'react-bootstrap/Button'
-import Link from 'react-router-dom/Link'
-import { Icon } from 'react-icons-kit'
-import {arrowCircleLeft} from 'react-icons-kit/fa/arrowCircleLeft'
+import {Button} from 'react-bootstrap'
 
 export default class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -43,11 +37,11 @@ export default class ErrorBoundary extends React.Component {
               }} >
                 <div className="container d-flex justify-content-center py-5">
                   <div className="text-center">
-                    <div className="h1" >404</div>
-                    <div className="" >Your Requested page Not Found</div>
+                    <div className="h1" >Error</div>
+                    <div className="" >There's something wrong</div>
                     <div className="my-3">
 
-                        <Button onclick={this.onclickHandle} className="" variant="light">
+                        <Button onclick={this.onclickHandle} className="btn btn-danger" variant="light">
                           Back to Home</Button>
 
                     </div>

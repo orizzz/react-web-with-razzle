@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import NavLink from 'react-router-dom/NavLink';
+import {NavLink} from 'react-router-dom';
 import logo from '../logo.svg';
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'

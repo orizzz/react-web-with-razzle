@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Nav from 'react-bootstrap/Nav'
-import NavLink from 'react-router-dom/NavLink';
+import {NavLink} from 'react-router-dom';
 import API_URL from '../config'
 
 import '../css/App.css';
@@ -73,13 +73,13 @@ class Footer extends Component {
                 <Nav justify className="flex-column mx-auto text-capitalize">
                     <div className="h5 text-light">kost di jakarta</div>
                 {this.state.lokasi_jakarta.map(lokasi => 
-                    <NavLink className="p-1 text-white" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
+                    <NavLink className="p-1 text-light" to={'/Search/'+lokasi.kategori} >{lokasi.kategori}</NavLink>
                 )}
                 </Nav>
                 <Nav justify className="flex-column mx-auto text-capitalize">
                     <div className="h5 text-light">lokasi favorit</div>
                 {this.state.lokasi_other.map(lokasi => 
-                    <NavLink className="p-1 text-white" to={'/Search/'+lokasi.kategori}>{lokasi.kategori}</NavLink>
+                    <NavLink className="p-1 text-light" to={'/Search/'+lokasi.kategori}  >{lokasi.kategori}</NavLink>
                 )}
                 </Nav>
                 <Nav className="flex-column ml-auto">

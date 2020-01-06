@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import API_URL from '../config'
 import {whatsapp} from 'react-icons-kit/fa/whatsapp'
 import { Icon } from 'react-icons-kit'
@@ -9,6 +9,8 @@ import Carousel from 'react-bootstrap/Carousel'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import { any } from 'prop-types';
+import {Helmet} from "react-helmet"
+import loadData from '../helper/loadData';
 
 class Detail extends Component {
 
@@ -21,32 +23,39 @@ class Detail extends Component {
             fasilitas: []
         }
     }
-    
+
     componentDidMount(){
         const {id} = this.props.match.params
         const {nama_kost} = this.props.match.params
         console.log(this.props);
 
-        fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                req: "detail",
-                id_kost: id
-            })
-        }).then(response => response.json())
-            .then(responseJson => {
-                this.setState({data: responseJson.data})
-                this.setState({unit: responseJson.data.unit})
-                this.setState({rooms: responseJson.data.rooms})
-                console.log(responseJson);
-                
-            }).catch((error) => {
-                console.log(error)
-            })
+        loadData("Detail",{
+            req: "detail",
+            id_kost: id
+        }).then(responseJson => {
+            this.setState({unit: responseJson.data.unit})
+            this.setState({rooms: responseJson.data.rooms})
+        })
+
+        // fetch(API_URL, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         req: "detail",
+        //         id_kost: id
+        //     })
+        // }).then(response => response.json())
+        // .then(responseJson => {
+        //     this.setState({unit: responseJson.data.unit})
+        //     this.setState({rooms: responseJson.data.rooms})
+        //     console.log(responseJson);
+            
+        // }).catch((error) => {
+        //     console.log(error)
+        // })
         
     }
 
@@ -67,7 +76,7 @@ class Detail extends Component {
                     <div className="h5 ">{room.jenis_rm}</div>
                     <div className="h5 ">Fasilitas</div>
                         {room.fasilitas.map(fas => 
-                            <div className="badge badge-light m-1 p-2">{fas}</div>
+                            <div key={fas.index} className="badge badge-light m-1 p-2">{fas}</div>
                         )}
                 </div>
                 <div className="col-lg-4 p-4">
@@ -95,6 +104,15 @@ class Detail extends Component {
         
         return (
             <div>
+                
+            <Helmet titleTemplate="%s | webkosan">
+                <meta charSet="utf-8" />
+                <meta name="description" content={this.state.unit.deskripsi} />
+                <meta name="keywords" content="kost,sewa kost"/>
+                <title>{this.state.unit.nama_kost}</title>
+                <link rel="canonical" href={this.props.match.url}/>
+            </Helmet>
+            
             <div className="container-fluid p-4">
                 <div className="row">
                     <div className="col-lg-2 col-12">
@@ -163,7 +181,7 @@ class Detail extends Component {
 var carosel_item = [];
   for (var i = 1; i <= 3; i++) {
     carosel_item.push(
-      <Carousel.Item >
+      <Carousel.Item key={i}>
           <img
             className="img d-block w-100 rounded"
             src={banner_1}

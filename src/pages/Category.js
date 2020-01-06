@@ -5,7 +5,7 @@ import banner_1 from '../img/carosel_1.jpg'
 import { Parallax } from 'react-parallax'
 import { Row, Col, Card, Button } from 'react-bootstrap'
 
-import Link from 'react-router-dom/Link'
+import {Link} from 'react-router-dom'
 
 import SearchBar from '../component/SearchBar'
 
